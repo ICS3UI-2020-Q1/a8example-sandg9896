@@ -17,7 +17,7 @@ public class Main implements Runnable, ActionListener{
  JButton validateButton;
  JButton resetButton;
 
- JTextArea outputText;
+ JTextArea outputArea;
  JTextArea instructionText;
   // Method to assemble our GUI
  public void run(){
@@ -75,6 +75,14 @@ public class Main implements Runnable, ActionListener{
    // set the location and size of the buttons
    validateButton.setBounds(320, 10, 100, 35);
    resetButton.setBounds(320, 55, 100, 35);
+
+   // add the actionListener to the buttons
+   validateButton.addActionListener(this);
+   resetButton.addActionListener(this);
+
+   // give each button an actionCommand
+   validateButton.setActionCommand("validate");
+   resetButton.setActionCommand("reset");
   
    // add the buttons to the main panel
    mainPanel.add(validateButton);
@@ -82,27 +90,66 @@ public class Main implements Runnable, ActionListener{
 
 
    // initialize the JButtons
-   outputText = new JTextArea();
+   outputArea = new JTextArea();
    instructionText = new JTextArea();
    // set the location and size of the buttons
-   outputText.setBounds(10, 100, 780, 245);
+   outputArea.setBounds(10, 100, 780, 245);
    instructionText.setBounds(10, 355, 780, 245);
 
    // disable the textAreas so that the user can't type in them
-   outputText.setEnabled(false);
+   outputArea.setEnabled(false);
    instructionText.setEnabled(false);
 
    // put some text inside the instructionText
    instructionText.setText("This is a simple Triangle detector.\nEnter an integer in each of the textfields above.\nPress the button \"Validate\" to find out whether you have made a valid triangle or not.\nPress the \"Clear\" button to clear the previous text.");
 
    // add the buttons to the main panel
-   mainPanel.add(outputText);
+   mainPanel.add(outputArea);
    mainPanel.add(instructionText);
    }
+   
+   // checks to see if trinagle is valid given side a, b, c
+   public boolean isValidTriangle(int a, int b, int c){
+     // check using the triangle inqueality
+      if( a + b > c && a + c > b && b + c > a ){
+        // valid triangle
+       return true;
+    } else {
+       // invalid triangle
+       return false;
+    }
+   }
+   
    // method called when a button is pressed
    public void actionPerformed(ActionEvent e){
    // get the command from the action
    String command = e.getActionCommand();
+   if(command.equals("validate")){
+    // get text from each text boxes
+    String firstText = firstSideInput.getText();
+    String secondText = secondSideInput.getText();      String thirdText = thirdSideInput.getText();
+    
+    //change the string into an integer
+    int sideA = Integer.parseInt(firstText);
+    int sideB = Integer.parseInt(secondText);
+    int sideC = Integer.parseInt(thirdText);
+
+    // using a mehtod to check if triangle is valid
+    boolean isValid = isValidTriangle(sideA, sideB, sideC);
+    // output user to user
+    if( isValid ){
+        outputArea.setText("This triangle is valid");
+      }else {
+        outputArea.setText("This triangle is invalid");
+      }
+    }else if(command.equals("reset")){
+     // clear all the texts in the text boxes
+     firstSideInput.setText("");
+     secondSideInput.setText("");
+     thirdSideInput.setText("");
+     outputArea.setText("");
+
+   }
  }
    // Main method to start our program
    public static void main(String[] args){
